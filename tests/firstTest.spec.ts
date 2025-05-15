@@ -138,5 +138,32 @@ test("extracting values", async ({ page }) => {
   expect(allRadioButtonLabels).toContain("Option 1"); //lalu membandingkan dengan apakah ada Option 1 di dalam array
 
   //input text
-  const emailField = page.locator(".exampleInputEmail1");
+  const emailField = basicForm.getByRole("textbox", { name: "Email" });
+  await emailField.fill("test123@gmail.com");
+  const emailValue = await emailField.inputValue();
+  expect(emailValue).toEqual("test123@gmail.com");
+
+  const placeHolderValue = await emailField.getAttribute("placeholder");
+  expect(placeHolderValue).toEqual("Email");
+});
+
+test("assertion", async ({ page }) => {
+  const basicForm = page
+    .locator("nb-card")
+    .filter({ hasText: "Basic form" })
+    .locator("button");
+
+  //general assertion
+  const value = 5;
+  expect(value).toEqual(5);
+
+  const text = await basicForm.textContent();
+  expect(text).toEqual("Submit");
+
+  //locator assertion
+  await expect(basicForm).toHaveText("Submit");
+
+  //soft assertion
+  await expect(basicForm).toHaveText("submit");
+  await basicForm.click();
 });
